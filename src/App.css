@@ -1,0 +1,10 @@
+.search-bar {
+  width: 500px;
+  border-radius: 15px;
+  justify-content: center;
+  margin-top: 10px;
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}

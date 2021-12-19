@@ -1,0 +1,5 @@
+1. loading for movie list and movie detail page
+2. show geners badges
+3. show director name with icon
+4. make name of movie in detail page a link, with homepage property if exists
+5. use person icon if profile_path is null

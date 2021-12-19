@@ -1,0 +1,16 @@
+.search-bar {
+  width: 500px;
+  margin: 10px auto;
+  /* justify-content: center;
+  margin-top: 10px;
+  /* height: 100vh; */
+  /* justify-content: center;
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column; */
+}
+.spinner {
+  display: flex;
+  justify-content: center;
+}

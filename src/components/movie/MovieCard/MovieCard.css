@@ -1,0 +1,51 @@
+.movie-1 {
+  background-color: #ae7df5;
+  width: 500px;
+  border-radius: 15px;
+  margin-top: 20px;
+}
+.pakflix-main {
+  justify-content: center;
+  margin-top: 10px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.left-arrow {
+  cursor: pointer;
+}
+.image-1 {
+  width: 100px;
+  height: 110px;
+  border-radius: 20px;
+}
+.image1-text {
+  color: white;
+  text-align: left;
+  padding-top: 10px;
+}
+.star-icon {
+  cursor: pointer;
+  color: white;
+}
+.rating {
+  color: white;
+}
+.NP-pages {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.Badges {
+  width: 500px;
+}
+
+.w-500 {
+  width: 500px;
+}
+
+.pagination-button {
+  width: 100px;
+}

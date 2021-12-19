@@ -1,0 +1,48 @@
+.Account-main {
+  justify-content: center;
+  margin-top: 10px;
+  /* height: 100vh; */
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.Account-body {
+  background-color: whitesmoke;
+  /* height: 250px; */
+  width: 500px;
+  /* margin-left: 250px; */
+  border-radius: 15px;
+  margin-top: 20px;
+}
+.BsHeart {
+  display: flex;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  border: thin solid #dadada;
+  background-color: white;
+  border-radius: 50%;
+}
+.icon {
+  height: 100%;
+}
+.BsPerson {
+  display: flex;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  border: thin solid #dadada;
+  background-color: white;
+  border-radius: 50%;
+}
+.favourites {
+  color: black;
+}
+.fav-text {
+  color: black;
+  opacity: 60%;
+}

@@ -1,0 +1,12 @@
+.ss-navbar-link {
+  margin-right: 10px;
+  color: white;
+  /* text-decoration: none; */
+}
+.navbar-container {
+  height: 60px;
+}
+
+.active-link {
+  border-bottom: 1px solid white;
+}

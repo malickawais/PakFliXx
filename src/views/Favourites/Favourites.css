@@ -1,0 +1,15 @@
+.favourites {
+  margin: 4px 4px;
+  padding: 4px;
+  /* background-color: rgb(143, 157, 229); */
+  /* width: 100%; */
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* white-space: pre-wrap; */
+  flex-wrap: wrap;
+}
+.actor-wrapper {
+  /* width: 300px; */
+  height: 500px;
+  flex: 1;
+}
