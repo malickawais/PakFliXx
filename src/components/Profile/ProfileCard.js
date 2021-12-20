@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Form,
   FormGroup,
@@ -10,68 +10,63 @@ import {
 } from "react-bootstrap";
 import "./Profile.css";
 
-export default function ProfileCard() {
-  return (
-    <>
-      <Card className="Profile-main border-0">
-        <Card.Body className="Profile-body">
-          <Form>
-            <Form.Group controlId="formFile" className="mb-3">
-              <Form.Label>Add Profile Picture</Form.Label>
-              <Form.Control type="file" />
-            </Form.Group>
+export default function ProfileInputCard({
+  value,
+  onSaveChanges,
+  userValue,
+  label,
+  onChange,
+}) {
+  const [isInputUpdating, setIsInputUpdating] = useState(false);
 
-            {isFirstNameUpdating ? (
-              <>
-                <Form.Control
-                  type="text"
-                  value={firstName}
-                  placeholder="Enter the First Name"
-                  onChange={onFirstNameChangeHandler}
-                />
-                <Button
-                  className="m-2"
-                  variant="dark"
-                  type="submit"
-                  onClick={() => {
-                    setIsFirstNameUpdating(false);
-                  }}
-                  disabled={firstName === user.firstName}
-                >
-                  Save Changes
-                </Button>
-                <Button
-                  variant="dark"
-                  type="submit"
-                  onClick={() => setIsFirstNameUpdating(false)}
-                >
-                  Cancel
-                </Button>
-              </>
-            ) : (
-              <Form.Group className="mb-3" controlId="formBasicFirstName">
-                <div className="d-flex justify-content-between">
-                  <Form.Label>First Name</Form.Label>{" "}
-                  <Button
-                    variant="dark"
-                    type="submit"
-                    onClick={() => {
-                      setIsFirstNameUpdating(true);
-                      setUser({
-                        ...user,
-                        firstName: firstName,
-                      });
-                    }}
-                  >
-                    Edit
-                  </Button>
-                </div>
-                <Form.Text className="">{firstName}</Form.Text>
-              </Form.Group>
-            )}
-          </Form>
-        </Card.Body>
-      </Card>
-    </>
+  return (
+    <Form>
+      {isInputUpdating ? (
+        <>
+          <Form.Control
+            type="text"
+            value={value}
+            placeholder="Enter the First Name"
+            onChange={onChange}
+          />
+          <Button
+            className="m-2"
+            variant="dark"
+            type="submit"
+            onClick={() => {
+              setIsInputUpdating(false);
+              onSaveChanges();
+            }}
+            disabled={value === userValue}
+          >
+            Save Changes
+          </Button>
+          <Button
+            variant="dark"
+            type="submit"
+            onClick={() => setIsInputUpdating(false)}
+          >
+            Cancel
+          </Button>
+        </>
+      ) : (
+        <Form.Group className="mb-3" controlId="formBasicFirstName">
+          <div className="d-flex justify-content-between">
+            <Form.Label>{label}</Form.Label>{" "}
+            <Button
+              variant="dark"
+              type="submit"
+              onClick={() => {
+                setIsInputUpdating(true);
+                onSaveChanges();
+              }}
+            >
+              Edit
+            </Button>
+          </div>
+          <Form.Text className="">{value}</Form.Text>
+        </Form.Group>
+      )}
+    </Form>
   );
 }
