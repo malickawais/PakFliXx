@@ -12,6 +12,7 @@ import Account from './views/Account/Account';
 import FavouriteList from './views/Favourites/FavouriteList';
 import MovieList from './views//Movie/MovieList';
 import ActorList from './views/Actor/ActorList';
+import Profile from './components/Profile/Profile';
 
 const App = () => {
   const routes = useRoutes([
@@ -26,6 +27,8 @@ const App = () => {
     { path: 'account', element: <Account /> },
     { path: 'account/favorites', element: <FavouriteList /> },
     { path: 'actors', element: <ActorList /> },
+    { path: 'account/profile', element: <Profile /> },
+
   ]);
   return (
     <AuthProvider>

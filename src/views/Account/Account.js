@@ -11,6 +11,7 @@ export default function Account() {
         renderIcon={() => (
           <BsPersonCircle size={'25'} color={'black'} className='icon' />
         )}
+        link={{to: "/account/profile"}}
         subTitle={'Click here to veiw or edit your profile'}
       />
       <AccountCard

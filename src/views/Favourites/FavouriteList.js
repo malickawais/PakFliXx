@@ -30,7 +30,7 @@ export default function FavouriteList() {
       })}
       </div>
       ) : ( 
-            <Alert variant='danger'>There is No Favourite Movie Click on {" "}
+            <Alert variant='dark'>There is No Favourite Movie Click on {" "}
             <NavLink to="/movies" >Movie List</NavLink> to add favourite movie
             </Alert>
             
@@ -48,7 +48,7 @@ export default function FavouriteList() {
         )     
       })}
       </div> ) : (
-            <Alert variant='danger'>There is No Favourite Movie Click on {" "}
+            <Alert variant='dark'>There is No Favourite Movie Click on {" "}
            <NavLink to="/actors" >Actor List</NavLink> {" "}to add favourite actor
             </Alert>)}
     </div>
