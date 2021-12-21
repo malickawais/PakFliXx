@@ -58,7 +58,6 @@ export default function ProfileInputCard({
               type="submit"
               onClick={() => {
                 setIsInputUpdating(true);
-                onSaveChanges();
               }}
             >
               Edit

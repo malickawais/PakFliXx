@@ -16,11 +16,13 @@ export default function Profile() {
     firstName: "Salman",
     lastName: "Awan",
     email: "malickawais8@gmail.com",
+    userName: "Mani34",
   });
 
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [email, setEmail] = useState(user.email);
+  const [userName, setUserName] = useState(user.userName);
 
   return (
     <Card className="Profile-main border-0">
@@ -64,6 +66,18 @@ export default function Profile() {
           }}
           value={email}
           label="Email"
+        />
+        <ProfileCard
+          userValue={user.userName}
+          onChange={(e) => setUserName(e.target.value)}
+          onSaveChanges={() => {
+            setUser({
+              ...user,
+              userName: userName,
+            });
+          }}
+          value={userName}
+          label="User Name"
         />
       </Card.Body>
     </Card>
