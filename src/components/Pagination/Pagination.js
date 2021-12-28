@@ -11,7 +11,7 @@ export default function Pagination(props) {
             className="pagination-button"
             variant="info"
             onClick={props.onPreviousClick}
-            disabled={props.currentPage === props.totalPages}
+            disabled={props.currentPage === 1}
           >
             Previous
           </Button>

@@ -20,6 +20,8 @@ export default function ActorCard(props) {
   console.log(knownFor);
   const gender = props.actor?.gender;
 
+  const isAddedToFavorite = favorites.find((fav) => fav.id === props.actor.id);
+
   return (
     <>
       <Card className="actor">
@@ -38,12 +40,12 @@ export default function ActorCard(props) {
 
           <div
             className="favourite-actor-container"
-            onClick={() =>
-              toggleFavorites({ ...props.actor, favouriteType: "actor" })
-            }
+            onClick={() => {
+              toggleFavorites({ ...props.actor, favouriteType: "actor" });
+            }}
           >
             <div>
-              {props.isAddedToFavorite ? (
+              {isAddedToFavorite ? (
                 <BsHeartFill color={"red"} size={"20"} />
               ) : (
                 <BsHeart color={"black"} size={"20"} />

@@ -124,15 +124,11 @@ export default function ActorList() {
         ) : (
           <>
             {actors.map((actor) => {
-              const isAddedToFavorite = favorites.find(
-                (fav) => fav.id === actor.id
-              );
-
               return (
                 <Col className="my-2" md={3}>
                   <ActorCard
                     actor={actor}
-                    isAddedToFavorite={isAddedToFavorite}
+                    // isAddedToFavorite={isAddedToFavorite}
                   />
                 </Col>
               );

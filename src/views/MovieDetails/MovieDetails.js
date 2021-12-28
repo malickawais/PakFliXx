@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faStar } from '@fortawesome/free-solid-svg-icons';
-import { Card, Row, Badge, Col, Spinner, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faStar } from "@fortawesome/free-solid-svg-icons";
+import { Card, Row, Badge, Col, Spinner, Button } from "react-bootstrap";
 
-import './DetailPage.css';
-import YoutubeEmbed from '../../components/Common/YoutubeEmbed/YoutubeEmbed';
+import "./DetailPage.css";
+import YoutubeEmbed from "../../components/Common/YoutubeEmbed/YoutubeEmbed";
 
-import { Navigate, useNavigate, useParams } from 'react-router';
-import apiClient from '../../apiClient';
-import { getImageUrl } from '../../utils';
-import { BsPersonCircle } from 'react-icons/bs';
-import { BiCameraMovie } from 'react-icons/bi';
+import { Navigate, useNavigate, useParams } from "react-router";
+import apiClient from "../../apiClient";
+import { getImageUrl } from "../../utils";
+import { BsPersonCircle } from "react-icons/bs";
+import { BiCameraMovie } from "react-icons/bi";
 
 export default function DetailsPage() {
   const navigate = useNavigate();
@@ -32,17 +32,17 @@ export default function DetailsPage() {
       setLoading(true);
       const res = await apiClient({
         url:
-          '/movie/' +
+          "/movie/" +
           params.movieId +
-          '?append_to_response=videos,movie_credits,credits',
-        method: 'GET',
+          "?append_to_response=videos,movie_credits,credits",
+        method: "GET",
       });
 
-      console.log('response', res);
+      console.log("response", res);
       setMovie(res.data);
       setLoading(false);
     } catch (e) {
-      console.log('error', e);
+      console.log("error", e);
       setLoading(false);
     }
   };
@@ -53,117 +53,117 @@ export default function DetailsPage() {
 
   if (loading) {
     return (
-      <Spinner className={'ms-2'} size='lg' animation='border' role='status'>
-        <span className='visually-hidden'>Loading...</span>
+      <Spinner className={"ms-2"} size="lg" animation="border" role="status">
+        <span className="visually-hidden">Loading...</span>
       </Spinner>
     );
   }
 
   const trailerVid = movie?.videos?.results?.find(
-    (vid) => vid.type === 'Trailer'
+    (vid) => vid.type === "Trailer"
   );
   const director = movie?.credits?.crew?.find(
-    (dir) => dir.known_for_department === 'Directing'
+    (dir) => dir.known_for_department === "Directing"
   );
 
   return (
     <div>
-      <Row className='d-flex w-100 justify-content-center'>
-        <Col className='border-0 pakflix-main p-4 ' md={6}>
-          <Row className='w-100'>
+      <Row className="d-flex w-100 justify-content-center">
+        <Col className="border-0 pakflix-wrapper p-4 " md={6}>
+          <Row className="w-100">
             <Col xs={4}>
               <FontAwesomeIcon
-                onClick={() => navigate('/movies')}
-                className='overveiw left-arrow'
+                onClick={() => navigate("/movies")}
+                className="overveiw left-arrow"
                 icon={faArrowLeft}
               />
             </Col>
-            <Col className='d-flex justify-content-end' xs={8}>
-              <FontAwesomeIcon className='overveiw star-icon' icon={faStar} />
+            <Col className="d-flex justify-content-end" xs={8}>
+              <FontAwesomeIcon className="overveiw star-icon" icon={faStar} />
             </Col>
           </Row>
-          <Row className='mt-4 w-100'>
+          <Row className="mt-4 w-100">
             <Col xs={2}>
               <img
-                className='movie-image'
+                className="movie-image"
                 src={getImageUrl(movie.poster_path)}
-                alt=''
+                alt=""
               />
             </Col>
-            <Col className='ps-4' xs={10}>
+            <Col className="ps-4" xs={10}>
               {movie.homepage ? (
-                <a className='overveiw' href={movie.homepage} target='_blank'>
+                <a className="overveiw" href={movie.homepage} target="_blank">
                   {movie.title}
                 </a>
               ) : (
                 <>
-                  <h4 className='overveiw'>{movie.title}</h4> <br />
+                  <h4 className="overveiw">{movie.title}</h4> <br />
                 </>
               )}
-              <p className='overveiw'>
-                <BiCameraMovie color={'white'} size={'25'} className='me-2' />
+              <p className="overveiw">
+                <BiCameraMovie color={"white"} size={"25"} className="me-2" />
 
                 {director?.name}
               </p>
 
               {movie.genres?.map((gen) => {
                 return (
-                  <Badge pill bg='warning' className='me-2'>
+                  <Badge pill bg="warning" className="me-2">
                     {gen.name}
                   </Badge>
                 );
               })}
             </Col>
           </Row>
-          <div className='d-flex my-3 justify-content-center'>
+          <div className="d-flex my-3 justify-content-center">
             {trailerVid && <YoutubeEmbed embedId={trailerVid?.key} />}
           </div>
-          <Row className='my-4'>
+          <Row className="my-4">
             <Col>
-              <h4 className='overveiw'>Overveiw</h4>
+              <h4 className="overveiw">Overveiw</h4>
             </Col>
-            <Col className='d-flex justify-content-end'>
+            <Col className="d-flex justify-content-end">
               <div>
                 <FontAwesomeIcon
-                  className='star-icon overveiw me-1'
+                  className="star-icon overveiw me-1"
                   icon={faStar}
                 />
-                <span className='overveiw'>9</span>
+                <span className="overveiw">9</span>
               </div>
             </Col>
-            <p className='overveiw'>
+            <p className="overveiw">
               {showText
                 ? movie.overview
                 : `${movie.overview?.substr(0, 50)}...`}
-              <span className='text' onClick={() => setShowText(!showText)}>
-                {showText ? ' Read Less' : ' Read all'}
+              <span className="text" onClick={() => setShowText(!showText)}>
+                {showText ? " Read Less" : " Read all"}
               </span>
             </p>
           </Row>
-          <div className='actors d-flex flex-row'>
+          <div className="actors d-flex flex-row">
             {movie.credits?.cast?.map((actor) => (
-              <div key={actor.id} className='text-center me-2 actor-container'>
+              <div key={actor.id} className="text-center me-2 actor-container">
                 {actor.profile_path ? (
                   <img
-                    className='img'
+                    className="img"
                     src={getImageUrl(actor.profile_path)}
-                    alt=''
+                    alt=""
                   />
                 ) : (
-                  <BsPersonCircle size={'60'} color={'white'} />
+                  <BsPersonCircle size={"60"} color={"white"} />
                 )}
                 <p>{actor.name}</p>
               </div>
             ))}
           </div>
-          <Row className='overveiw py-4'>
-            <Col className='me-4 px-4'>
-              <h3 className='imdb'>Vote Average</h3>
-              <p className='imdb'>{movie.vote_average}</p>
+          <Row className="overveiw py-4">
+            <Col className="me-4 px-4">
+              <h3 className="imdb">Vote Average</h3>
+              <p className="imdb">{movie.vote_average}</p>
             </Col>
-            <Col className='ms-4 px-4'>
-              <h3 className='imdb'>Vote Count</h3>
-              <p className='imdb'>{movie.vote_count}</p>
+            <Col className="ms-4 px-4">
+              <h3 className="imdb">Vote Count</h3>
+              <p className="imdb">{movie.vote_count}</p>
             </Col>
           </Row>
         </Col>

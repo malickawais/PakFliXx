@@ -12,25 +12,26 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import "../../App.css";
-
+import useFavorites from "../../contexts/FavouriteContext";
 import { Link, useLocation } from "react-router-dom";
-import { BsHeart } from "react-icons/bs";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
 import apiClient from "../../apiClient";
 import { getImageUrl } from "../../utils";
 import "../../components/movie/MovieCard/MovieCard.css";
 import Pagination from "../../components/Pagination/Pagination";
 
 export default function TvShowLanding() {
+  const { favorites, toggleFavorites } = useFavorites();
+
   const [serials, setSerials] = useState([]);
   const [loading, setLoading] = useState(false);
   const [allSerials, setAllSerials] = useState([]);
-  const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [disable, setDisable] = useState(false);
   const [generes, setGeneres] = useState([]);
   const [genreSerials, setGenreSerials] = useState();
   const [totalPages, setTotalPages] = useState();
-  const [currentPage, setCurrentPage] = useState();
+  const [currentPage, setCurrentPage] = useState(0);
 
   const { search } = useLocation();
 
@@ -40,7 +41,7 @@ export default function TvShowLanding() {
     try {
       setLoading(true);
       const res = await apiClient({
-        url: `/discover/tv?page=${page}&with_genres=${genreSerials}`,
+        url: `/discover/tv?page=${currentPage + 1}&with_genres=${genreSerials}`,
         method: "GET",
       });
       setLoading(false);
@@ -174,11 +175,11 @@ export default function TvShowLanding() {
       <Pagination
         onPreviousClick={() => {
           fetchTvSeries();
-          setPage(page - 1);
+          setCurrentPage(currentPage - 1);
         }}
         onNextClick={() => {
           fetchTvSeries();
-          setPage(page + 1);
+          setCurrentPage(currentPage + 1);
         }}
         currentPage={currentPage}
         totalPages={totalPages}
@@ -198,6 +199,10 @@ export default function TvShowLanding() {
       ) : (
         <>
           {serials.map((serial) => {
+            const isAddedToFavorite = favorites.find(
+              (fav) => fav.id === serial.id
+            );
+
             return (
               <Link style={{ textDecoration: "none" }} key={serial.id} to={""}>
                 <Card className="border-0 pakflix-main">
@@ -226,9 +231,21 @@ export default function TvShowLanding() {
                         className="d-flex jutify-content-between flex-column py-4 px-2"
                         xs={2}
                       >
-                        <div>
-                          <BsHeart color={"white"} size={"20"} />
+                        <div
+                          onClick={() =>
+                            toggleFavorites({
+                              ...serial,
+                              favouriteType: "tv",
+                            })
+                          }
+                        >
+                          {isAddedToFavorite ? (
+                            <BsHeartFill color={"red"} size={"20"} />
+                          ) : (
+                            <BsHeart color={"white"} size={"20"} />
+                          )}
                         </div>
+
                         <div>
                           <FontAwesomeIcon
                             className="star-icon me-1 mt-4"
@@ -252,16 +269,15 @@ export default function TvShowLanding() {
       <Pagination
         onPreviousClick={() => {
           fetchTvSeries();
-          setPage(page - 1);
+          setCurrentPage(currentPage - 1);
         }}
         onNextClick={() => {
           fetchTvSeries();
-          setPage(page + 1);
+          setCurrentPage(currentPage + 1);
         }}
         currentPage={currentPage}
         totalPages={totalPages}
       />
-      {/* )} */}
     </>
   );
 }
