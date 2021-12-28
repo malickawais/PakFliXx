@@ -1,25 +1,29 @@
-import React, { useState } from 'react';
-import '../../components/movie/MovieCard/MovieCard.css';
-import { Button } from 'react-bootstrap';
+import React, { useState } from "react";
+import "../../components/movie/MovieCard/MovieCard.css";
+import { Button } from "react-bootstrap";
 
 export default function Pagination(props) {
-  const [page, setPage] = useState(1);
   return (
-    <div className='NP-pages'>
-      <div className='d-flex justify-content-between flex-row w-500'>
+    <div className="NP-pages">
+      <div className="d-flex justify-content-between flex-row w-500">
         <div>
           <Button
-            className='pagination-button'
-            variant='info'
+            className="pagination-button"
+            variant="info"
             onClick={props.onPreviousClick}
+            disabled={props.currentPage === props.totalPages}
           >
             Previous
           </Button>
         </div>
-        <div className=''>
+        <h5>
+          {props.currentPage} / {props.totalPages}
+        </h5>
+        <div className="">
           <Button
-            className='pagination-button'
-            variant='info'
+            className="pagination-button"
+            disabled={props.currentPage === props.totalPages}
+            variant="info"
             onClick={props.onNextClick}
           >
             Next

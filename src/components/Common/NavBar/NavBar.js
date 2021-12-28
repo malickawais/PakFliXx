@@ -1,7 +1,7 @@
-import React from 'react';
-import { Container, Nav, Navbar, Button } from 'react-bootstrap';
-import { Link, NavLink, useResolvedPath, useMatch } from 'react-router-dom';
-import './NavBar.css';
+import React from "react";
+import { Container, Nav, Navbar, Button } from "react-bootstrap";
+import { Link, NavLink, useResolvedPath, useMatch } from "react-router-dom";
+import "./NavBar.css";
 
 function CustomLink({ children, to, ...props }) {
   let resolved = useResolvedPath(to);
@@ -10,8 +10,8 @@ function CustomLink({ children, to, ...props }) {
 
   return (
     <Link
-      className='mx-4 ss-navbar-link'
-      style={{ textDecoration: match ? 'underline' : 'none' }}
+      className="mx-4 ss-navbar-link"
+      style={{ textDecoration: match ? "underline" : "none" }}
       to={to}
       {...props}
     >
@@ -22,19 +22,20 @@ function CustomLink({ children, to, ...props }) {
 
 export default function NavBar({ user, onLogout }) {
   return (
-    <Navbar className='navbar-container' bg='dark' variant='dark' expand='lg'>
+    <Navbar className="navbar-container" bg="dark" variant="dark" expand="lg">
       <Container>
         <Navbar.Brand>
-          <NavLink to='/'>PakFliXx</NavLink>
+          <NavLink to="/">PakFliXx</NavLink>
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls='basic-navbar-nav' />
-        <Navbar.Collapse id='basic-navbar-nav'>
-          <Nav className='d-flex align-items-center justify-content-between w-100'>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="d-flex align-items-center justify-content-between w-100">
             <div>
-              <CustomLink to='/movies'>Movies</CustomLink>
-              <CustomLink to='/tv'>Tv</CustomLink>
-              <CustomLink to='/actors'>Actors</CustomLink>
-              <CustomLink to='/account'>Account</CustomLink>
+              <CustomLink to="/movies">Movies</CustomLink>
+              <CustomLink to="/genres">Genres</CustomLink>
+              <CustomLink to="/tv">Tv</CustomLink>
+              <CustomLink to="/actors">Actors</CustomLink>
+              <CustomLink to="/account">Account</CustomLink>
             </div>
             {/* <div>
               {user ? (

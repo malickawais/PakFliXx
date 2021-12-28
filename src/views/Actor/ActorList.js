@@ -15,6 +15,8 @@ export default function ActorList() {
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [disable, setDisable] = useState(false);
+  const [currentPage, setCurrentPage] = useState();
+  const [totalPages, setTotalPages] = useState();
 
   const onChangeHandler = (e) => {
     const query = e.target.value;
@@ -31,6 +33,8 @@ export default function ActorList() {
       console.log("response", res);
       setActors(res.data.results);
       setAllActors(res.data.results);
+      setTotalPages(res.data.total_pages);
+      setCurrentPage(res.data.page);
     } catch (e) {
       console.log("error", e);
       setLoading(false);
@@ -99,6 +103,12 @@ export default function ActorList() {
           </Col>
         </Row>
       </form>
+      <Pagination
+        onPreviousClick={() => setPage(page - 1)}
+        onNextClick={() => setPage(page + 1)}
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
       <Row className="m-4">
         {loading ? (
           <div className="d-flex justify-content-center">
@@ -134,6 +144,8 @@ export default function ActorList() {
       <Pagination
         onPreviousClick={() => setPage(page - 1)}
         onNextClick={() => setPage(page + 1)}
+        currentPage={currentPage}
+        totalPages={totalPages}
       />
     </>
   );

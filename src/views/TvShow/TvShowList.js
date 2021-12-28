@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import "../../App.css";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { BsHeart } from "react-icons/bs";
 import apiClient from "../../apiClient";
 import { getImageUrl } from "../../utils";
@@ -27,18 +27,28 @@ export default function TvShowLanding() {
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [disable, setDisable] = useState(false);
+  const [generes, setGeneres] = useState([]);
+  const [genreSerials, setGenreSerials] = useState();
+  const [totalPages, setTotalPages] = useState();
+  const [currentPage, setCurrentPage] = useState();
+
+  const { search } = useLocation();
+
+  let searchParams = new URLSearchParams(search);
 
   const fetchTvSeries = async () => {
     try {
       setLoading(true);
       const res = await apiClient({
-        url: `/discover/tv?page=${page}`,
+        url: `/discover/tv?page=${page}&with_genres=${genreSerials}`,
         method: "GET",
       });
       setLoading(false);
       console.log("response", res);
       setSerials(res.data.results);
       setAllSerials(res.data.results);
+      setTotalPages(res.data.total_pages);
+      setCurrentPage(res.data.page);
     } catch (e) {
       console.log("error", e);
       setLoading(false);
@@ -54,11 +64,41 @@ export default function TvShowLanding() {
       setLoading(false);
       console.log("response", res);
       setSerials(res.data.results);
+      setTotalPages(res.data.total_pages);
+      setCurrentPage(res.data.page);
     } catch (e) {
       console.log("error", e);
       setLoading(false);
     }
   };
+  const fetchGenres = async (genreType) => {
+    try {
+      setLoading(true);
+      const res = await apiClient({
+        url: `/genre/tv/list`,
+        method: "GET",
+      });
+      setLoading(false);
+      console.log("response", res);
+      setGeneres(res.data.genres);
+    } catch (e) {
+      console.log("error", e);
+      setLoading(false);
+    }
+  };
+  const onGenreSelectHandler = (e) => {
+    setGenreSerials(e.target.value);
+  };
+
+  const genreId = searchParams.get("genre_id");
+
+  useEffect(() => {
+    setGenreSerials(genreId);
+  }, [genreId]);
+
+  useEffect(() => {
+    fetchGenres();
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -71,7 +111,7 @@ export default function TvShowLanding() {
 
   useEffect(() => {
     fetchTvSeries();
-  }, [page]);
+  }, [genreSerials]);
 
   const onChangeHandler = (e) => {
     const query = e.target.value;
@@ -124,15 +164,26 @@ export default function TvShowLanding() {
           </Col>
         </Row>
       </form>
-      {/* <div className="search-bar">
-        <FormControl
-          placeholder="Username"
-          aria-label="Username"
-          aria-describedby="basic-addon1"
-          placeholder="Enter here for search"
-          onChange={(e) => onChangeHandler(e)}
-        />
-      </div> */}
+      <div className="search-bar">
+        <Form.Select value={genreSerials} onChange={onGenreSelectHandler}>
+          {generes.map((genre) => {
+            return <option value={genre.id}>{genre.name}</option>;
+          })}
+        </Form.Select>
+      </div>
+      <Pagination
+        onPreviousClick={() => {
+          fetchTvSeries();
+          setPage(page - 1);
+        }}
+        onNextClick={() => {
+          fetchTvSeries();
+          setPage(page + 1);
+        }}
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
+
       {loading ? (
         <div className="d-flex justify-content-center">
           <Spinner
@@ -199,9 +250,18 @@ export default function TvShowLanding() {
       )}
 
       <Pagination
-        onPreviousClick={() => setPage(page - 1)}
-        onNextClick={() => setPage(page + 1)}
+        onPreviousClick={() => {
+          fetchTvSeries();
+          setPage(page - 1);
+        }}
+        onNextClick={() => {
+          fetchTvSeries();
+          setPage(page + 1);
+        }}
+        currentPage={currentPage}
+        totalPages={totalPages}
       />
+      {/* )} */}
     </>
   );
 }

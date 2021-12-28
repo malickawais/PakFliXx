@@ -29,11 +29,16 @@ export default function MovieList() {
   const [query, setQuery] = useState("");
   const [disable, setDisable] = useState(false);
   const [actor, setActor] = useState();
+  const [genreMovies, setGenreMovies] = useState("");
+  const [generes, setGeneres] = useState([]);
+  const [totalPages, setTotalPages] = useState();
+  const [currentPage, setCurrentPage] = useState();
 
   const { search } = useLocation();
 
   let searchParams = new URLSearchParams(search);
 
+  //
   const fetchPersonById = async () => {
     try {
       setLoading(true);
@@ -62,13 +67,15 @@ export default function MovieList() {
       const res = await apiClient({
         url: `/discover/movie?page=${page}&vote_average.gte=${ratingMinimum}&vote_average.lte=${ratingMaximum}&with_cast=${searchParams.get(
           "person_id"
-        )}`,
+        )}&with_genres=${genreMovies}`,
         method: "GET",
       });
       setLoading(false);
       console.log("response", res);
       setMovies(res.data.results);
       setAllMovies(res.data.results);
+      setTotalPages(res.data.total_pages);
+      setCurrentPage(res.data.page);
     } catch (e) {
       console.log("error", e);
       setLoading(false);
@@ -84,6 +91,8 @@ export default function MovieList() {
       setLoading(false);
       console.log("response", res);
       setMovies(res.data.results);
+      setTotalPages(res.data.total_pages);
+      setCurrentPage(res.data.page);
     } catch (e) {
       console.log("error", e);
       setLoading(false);
@@ -92,25 +101,13 @@ export default function MovieList() {
 
   useEffect(() => {
     fetchMovies();
-  }, [page, ratingMaximum, ratingMinimum]);
+  }, [page, ratingMaximum, ratingMinimum, genreMovies]);
 
   const onSubmit = (e) => {
     e.preventDefault();
     searchMovies();
   };
 
-  const onChangeHandler = (e) => {
-    const query = e.target.value;
-    if (!e.target.value) {
-      e.preventDefault();
-      setMovies(allMovies);
-      return;
-    }
-    let filteredMovieList = allMovies.filter((movie) =>
-      movie.title.toLowerCase().includes(query.toLowerCase())
-    );
-    setMovies(filteredMovieList);
-  };
   const onSelectHandler = (e) => {
     let query = e.target.value;
     setRating(e.target.value);
@@ -118,94 +115,166 @@ export default function MovieList() {
     setRatingMinimum(querySplit[0]);
     setRatingMaximum(querySplit[1]);
   };
+  const onGenreSelectHandler = (e) => {
+    setGenreMovies(e.target.value);
+  };
+
+  const fetchGenres = async (genreType) => {
+    try {
+      setLoading(true);
+      const res = await apiClient({
+        url: `/genre/movie/list`,
+        method: "GET",
+      });
+      setLoading(false);
+      console.log("response", res);
+      setGeneres(res.data.genres);
+    } catch (e) {
+      console.log("error", e);
+      setLoading(false);
+    }
+  };
+
+  // get person id and genre id from search params
+
+  const personId = searchParams.get("person_id");
+  const genreId = searchParams.get("genre_id");
+
+  // this use effect will run only first time when there is
+  // genre_id or person_id in the url search params
+  useEffect(() => {
+    if (personId) {
+      fetchPersonById();
+    }
+    if (genreId) {
+      setGenreMovies(searchParams.get("genre_id"));
+    }
+  }, [personId, genreId]);
 
   useEffect(() => {
-    searchParams.get("person_id") && fetchPersonById();
+    fetchGenres();
   }, []);
 
   return (
     <>
-      <Row>
-        <Col xs={3}>
-          {searchParams.get("person_id") && actor && (
-            <div className="Actor-card">
-              <ActorCard actor={actor} />{" "}
+      <div className="movie-list-wrapper">
+        <Row>
+          <Col xs={3}>
+            {searchParams.get("person_id") && actor && (
+              <div className="Actor-card">
+                <ActorCard actor={actor} movieListVeiw={true} />{" "}
+              </div>
+            )}
+          </Col>
+          <Col xs={searchParams.get("person_id") ? 9 : 12}>
+            <form onSubmit={onSubmit} className="search-bar-actor">
+              <Row>
+                <Col xs={8}>
+                  <FormControl
+                    value={query}
+                    placeholder="Username"
+                    aria-label="Username"
+                    aria-describedby="basic-addon1"
+                    placeholder="Enter here for search"
+                    onChange={(e) => onChangeSearchHandler(e)}
+                  />
+                </Col>
+                <Col className="px-2" xs={2}>
+                  <Button
+                    type="submit"
+                    disabled={query === "" || loading}
+                    onClick={onSubmit}
+                    variant="dark"
+                  >
+                    Submit
+                  </Button>
+                </Col>
+                <Col className="px-2" xs={2}>
+                  <Button
+                    disabled={query == ""}
+                    onClick={() => {
+                      setQuery("");
+                      fetchMovies();
+                    }}
+                    variant="dark"
+                  >
+                    Clear
+                  </Button>
+                </Col>
+              </Row>
+            </form>
+
+            <div className="search-bar">
+              <Form.Select value={rating} onChange={onSelectHandler}>
+                <option value="1-3">1-3</option>
+                <option value="4-7">4-7</option>
+                <option value="7-10">7+</option>
+              </Form.Select>
             </div>
-          )}
-        </Col>
-        <Col xs={9}>
-          <form onSubmit={onSubmit} className="search-bar-actor">
-            <Row>
-              <Col xs={8}>
-                <FormControl
-                  value={query}
-                  placeholder="Username"
-                  aria-label="Username"
-                  aria-describedby="basic-addon1"
-                  placeholder="Enter here for search"
-                  onChange={(e) => onChangeSearchHandler(e)}
+            <div className="search-bar">
+              <Form.Select value={genreMovies} onChange={onGenreSelectHandler}>
+                {generes.map((genre) => {
+                  return <option value={genre.id}>{genre.name}</option>;
+                })}
+              </Form.Select>
+            </div>
+            {loading ? (
+              <div className="spinner">
+                <Spinner
+                  className={"ms-2"}
+                  size="lg"
+                  animation="border"
+                  role="status"
+                >
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </div>
+            ) : (
+              <>
+                <Pagination
+                  onPreviousClick={() => setPage(page - 1)}
+                  onNextClick={() => setPage(page + 1)}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
                 />
-              </Col>
-              <Col className="px-2" xs={2}>
-                <Button
-                  type="submit"
-                  disabled={query === "" || loading}
-                  onClick={onSubmit}
-                  variant="dark"
-                >
-                  Submit
-                </Button>
-              </Col>
-              <Col className="px-2" xs={2}>
-                <Button
-                  disabled={query == ""}
-                  onClick={() => {
-                    setQuery("");
-                    fetchMovies();
-                  }}
-                  variant="dark"
-                >
-                  Clear
-                </Button>
-              </Col>
-            </Row>
-          </form>
+              </>
+            )}
+            {movies.map((movie) => {
+              const isAddedToFavorite = favorites.find(
+                (fav) => fav.id === movie.id
+              );
+              return (
+                <MovieCard
+                  movie={movie}
+                  isAddedToFavorite={isAddedToFavorite}
+                />
+              );
+            })}
 
-          <div className="search-bar">
-            <Form.Select value={rating} onChange={onSelectHandler}>
-              <option value="1-3">1-3</option>
-              <option value="4-7">4-7</option>
-              <option value="7-10">7+</option>
-            </Form.Select>
-          </div>
-          {movies.map((movie) => {
-            const isAddedToFavorite = favorites.find(
-              (fav) => fav.id === movie.id
-            );
-            return (
-              <MovieCard movie={movie} isAddedToFavorite={isAddedToFavorite} />
-            );
-          })}
-
-          {loading ? (
-            <div className="spinner">
-              <Spinner
-                className={"ms-2"}
-                size="lg"
-                animation="border"
-                role="status"
-              >
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </div>
-          ) : (
-            <Pagination
-              onPreviousClick={() => setPage(page - 1)}
-              onNextClick={() => setPage(page + 1)}
-            />
-          )}
-        </Col>
-      </Row>
+            {loading ? (
+              <div className="spinner">
+                <Spinner
+                  className={"ms-2"}
+                  size="lg"
+                  animation="border"
+                  role="status"
+                >
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </div>
+            ) : (
+              <>
+                <Pagination
+                  onPreviousClick={() => setPage(page - 1)}
+                  onNextClick={() => setPage(page + 1)}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                />
+              </>
+            )}
+          </Col>
+        </Row>
+      </div>
     </>
   );
 }
