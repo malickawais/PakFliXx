@@ -6,6 +6,7 @@ import useFavorites from "../../contexts/FavouriteContext";
 import { Spinner, Row, Col, Button, FormControl } from "react-bootstrap";
 import Pagination from "../../components/Pagination/Pagination";
 import "./ActorList.css";
+import ModalPage from "../../components/Modal/Modal";
 
 export default function ActorList() {
   const [actors, setActors] = useState([]);
@@ -15,18 +16,19 @@ export default function ActorList() {
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [disable, setDisable] = useState(false);
-  const [currentPage, setCurrentPage] = useState();
   const [totalPages, setTotalPages] = useState();
+  const [show, setShow] = useState(false);
+  const [id, setId] = useState("");
 
   const onChangeHandler = (e) => {
     const query = e.target.value;
     setQuery(query);
   };
-  const fetchActors = async () => {
+  const fetchActors = async (_page) => {
     try {
       setLoading(true);
       const res = await apiClient({
-        url: "/person/popular?page=" + page,
+        url: `/person/popular?page=${_page}`,
         method: "GET",
       });
       setLoading(false);
@@ -34,7 +36,8 @@ export default function ActorList() {
       setActors(res.data.results);
       setAllActors(res.data.results);
       setTotalPages(res.data.total_pages);
-      setCurrentPage(res.data.page);
+      setPage(res.data.page);
+      // console.log(res.data.page);
     } catch (e) {
       console.log("error", e);
       setLoading(false);
@@ -58,7 +61,7 @@ export default function ActorList() {
 
   useEffect(() => {
     fetchActors();
-  }, [page]);
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -104,9 +107,9 @@ export default function ActorList() {
         </Row>
       </form>
       <Pagination
-        onPreviousClick={() => setPage(page - 1)}
-        onNextClick={() => setPage(page + 1)}
-        currentPage={currentPage}
+        onPreviousClick={() => fetchActors(page - 1)}
+        onNextClick={() => fetchActors(page + 1)}
+        page={page}
         totalPages={totalPages}
       />
       <Row className="m-4">
@@ -125,12 +128,23 @@ export default function ActorList() {
           <>
             {actors.map((actor) => {
               return (
-                <Col className="my-2" md={3}>
-                  <ActorCard
-                    actor={actor}
-                    // isAddedToFavorite={isAddedToFavorite}
+                <>
+                  <Col className="my-2" md={3}>
+                    <ActorCard
+                      actor={actor}
+                      actorListVeiw={true}
+                      onBadgeClick={(_id) => {
+                        setId(_id);
+                        setShow(true);
+                      }}
+                    />
+                  </Col>
+                  <ModalPage
+                    id={id}
+                    show={show}
+                    onHide={() => setShow(false)}
                   />
-                </Col>
+                </>
               );
             })}
           </>
@@ -138,9 +152,9 @@ export default function ActorList() {
       </Row>
 
       <Pagination
-        onPreviousClick={() => setPage(page - 1)}
-        onNextClick={() => setPage(page + 1)}
-        currentPage={currentPage}
+        onPreviousClick={() => fetchActors(page - 1)}
+        onNextClick={() => fetchActors(page + 1)}
+        page={page}
         totalPages={totalPages}
       />
     </>

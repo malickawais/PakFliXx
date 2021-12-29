@@ -14,6 +14,7 @@ import MovieList from "./views//Movie/MovieList";
 import ActorList from "./views/Actor/ActorList";
 import Profile from "./components/Profile/Profile";
 import GenreList from "./views/Genres/GenreList";
+import ModalPage from "./components/Modal/Modal";
 
 const App = () => {
   const routes = useRoutes([
@@ -30,6 +31,7 @@ const App = () => {
     { path: "actors", element: <ActorList /> },
     { path: "account/profile", element: <Profile /> },
     { path: "genres", element: <GenreList /> },
+    { path: "modal", element: <ModalPage /> },
   ]);
   return (
     <AuthProvider>

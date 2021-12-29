@@ -32,7 +32,7 @@ export default function MovieList() {
   const [genreMovies, setGenreMovies] = useState("");
   const [generes, setGeneres] = useState([]);
   const [totalPages, setTotalPages] = useState();
-  const [currentPage, setCurrentPage] = useState();
+  // const [currentPage, setCurrentPage] = useState();
 
   const { search } = useLocation();
 
@@ -61,11 +61,11 @@ export default function MovieList() {
     setQuery(query);
   };
 
-  const fetchMovies = async () => {
+  const fetchMovies = async (_page) => {
     try {
       setLoading(true);
       const res = await apiClient({
-        url: `/discover/movie?page=${page}&vote_average.gte=${ratingMinimum}&vote_average.lte=${ratingMaximum}&with_cast=${searchParams.get(
+        url: `/discover/movie?page=${_page}&vote_average.gte=${ratingMinimum}&vote_average.lte=${ratingMaximum}&with_cast=${searchParams.get(
           "person_id"
         )}&with_genres=${genreMovies}`,
         method: "GET",
@@ -75,7 +75,8 @@ export default function MovieList() {
       setMovies(res.data.results);
       setAllMovies(res.data.results);
       setTotalPages(res.data.total_pages);
-      setCurrentPage(res.data.page);
+      setPage(res.data.page);
+      console.log(res.data.page);
     } catch (e) {
       console.log("error", e);
       setLoading(false);
@@ -92,16 +93,21 @@ export default function MovieList() {
       console.log("response", res);
       setMovies(res.data.results);
       setTotalPages(res.data.total_pages);
-      setCurrentPage(res.data.page);
+      setPage(res.data.page);
     } catch (e) {
       console.log("error", e);
       setLoading(false);
     }
   };
 
+  // get person id and genre id from search params
+
+  const personId = searchParams.get("person_id");
+  const genreId = searchParams.get("genre_id");
+
   useEffect(() => {
     fetchMovies();
-  }, [page, ratingMaximum, ratingMinimum, genreMovies]);
+  }, [ratingMaximum, ratingMinimum, genreMovies, personId]);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -134,11 +140,6 @@ export default function MovieList() {
       setLoading(false);
     }
   };
-
-  // get person id and genre id from search params
-
-  const personId = searchParams.get("person_id");
-  const genreId = searchParams.get("genre_id");
 
   // this use effect will run only first time when there is
   // genre_id or person_id in the url search params
@@ -232,10 +233,11 @@ export default function MovieList() {
             ) : (
               <>
                 <Pagination
-                  onPreviousClick={() => setPage(page - 1)}
-                  onNextClick={() => setPage(page + 1)}
-                  currentPage={currentPage}
+                  onPreviousClick={() => fetchMovies(page - 1)}
+                  onNextClick={() => fetchMovies(page + 1)}
+                  // currentPage={currentPage}
                   totalPages={totalPages}
+                  page={page}
                 />
               </>
             )}
@@ -265,9 +267,10 @@ export default function MovieList() {
             ) : (
               <>
                 <Pagination
-                  onPreviousClick={() => setPage(page - 1)}
-                  onNextClick={() => setPage(page + 1)}
-                  currentPage={currentPage}
+                  onPreviousClick={() => fetchMovies(page - 1)}
+                  onNextClick={() => fetchMovies(page + 1)}
+                  // currentPage={currentPage}
+                  page={page}
                   totalPages={totalPages}
                 />
               </>

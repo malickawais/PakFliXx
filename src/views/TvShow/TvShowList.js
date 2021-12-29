@@ -19,6 +19,7 @@ import apiClient from "../../apiClient";
 import { getImageUrl } from "../../utils";
 import "../../components/movie/MovieCard/MovieCard.css";
 import Pagination from "../../components/Pagination/Pagination";
+import TvSerial from "../../components/TvSerial/TvSerial";
 
 export default function TvShowLanding() {
   const { favorites, toggleFavorites } = useFavorites();
@@ -31,17 +32,18 @@ export default function TvShowLanding() {
   const [generes, setGeneres] = useState([]);
   const [genreSerials, setGenreSerials] = useState();
   const [totalPages, setTotalPages] = useState();
-  const [currentPage, setCurrentPage] = useState(0);
+  // const [currentPage, setCurrentPage] = useState(0);
+  const [page, setPage] = useState(1);
 
   const { search } = useLocation();
 
   let searchParams = new URLSearchParams(search);
 
-  const fetchTvSeries = async () => {
+  const fetchTvSeries = async (_page) => {
     try {
       setLoading(true);
       const res = await apiClient({
-        url: `/discover/tv?page=${currentPage + 1}&with_genres=${genreSerials}`,
+        url: `/discover/tv?page=${_page}&with_genres=${genreSerials}`,
         method: "GET",
       });
       setLoading(false);
@@ -49,7 +51,7 @@ export default function TvShowLanding() {
       setSerials(res.data.results);
       setAllSerials(res.data.results);
       setTotalPages(res.data.total_pages);
-      setCurrentPage(res.data.page);
+      setPage(res.data.page);
     } catch (e) {
       console.log("error", e);
       setLoading(false);
@@ -66,7 +68,7 @@ export default function TvShowLanding() {
       console.log("response", res);
       setSerials(res.data.results);
       setTotalPages(res.data.total_pages);
-      setCurrentPage(res.data.page);
+      setPage(res.data.page);
     } catch (e) {
       console.log("error", e);
       setLoading(false);
@@ -113,19 +115,6 @@ export default function TvShowLanding() {
   useEffect(() => {
     fetchTvSeries();
   }, [genreSerials]);
-
-  const onChangeHandler = (e) => {
-    const query = e.target.value;
-    if (!e.target.value) {
-      e.preventDefault();
-      setSerials(allSerials);
-      return;
-    }
-    let filteredSerialList = allSerials.filter((serial) =>
-      serial.name.toLowerCase().includes(query.toLowerCase())
-    );
-    setSerials(filteredSerialList);
-  };
 
   return (
     <>
@@ -174,15 +163,13 @@ export default function TvShowLanding() {
       </div>
       <Pagination
         onPreviousClick={() => {
-          fetchTvSeries();
-          setCurrentPage(currentPage - 1);
+          fetchTvSeries(page - 1);
         }}
         onNextClick={() => {
-          fetchTvSeries();
-          setCurrentPage(currentPage + 1);
+          fetchTvSeries(page + 1);
         }}
-        currentPage={currentPage}
         totalPages={totalPages}
+        page={page}
       />
 
       {loading ? (
@@ -205,61 +192,10 @@ export default function TvShowLanding() {
 
             return (
               <Link style={{ textDecoration: "none" }} key={serial.id} to={""}>
-                <Card className="border-0 pakflix-main">
-                  <Card.Body className="movie1-box">
-                    <Row
-                      style={{
-                        background: serial.backgroundColor,
-                      }}
-                      className="movie-1 "
-                    >
-                      <Col xs={3}>
-                        <img
-                          src={getImageUrl(serial.poster_path)}
-                          className=" px-1 py-3 image-1"
-                        />
-                      </Col>
-                      <Col className="image1-text" xs={7}>
-                        <h5>{serial.name}</h5>
-                        <Row>
-                          <Col>
-                            <p>Serial</p>
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col
-                        className="d-flex jutify-content-between flex-column py-4 px-2"
-                        xs={2}
-                      >
-                        <div
-                          onClick={() =>
-                            toggleFavorites({
-                              ...serial,
-                              favouriteType: "tv",
-                            })
-                          }
-                        >
-                          {isAddedToFavorite ? (
-                            <BsHeartFill color={"red"} size={"20"} />
-                          ) : (
-                            <BsHeart color={"white"} size={"20"} />
-                          )}
-                        </div>
-
-                        <div>
-                          <FontAwesomeIcon
-                            className="star-icon me-1 mt-4"
-                            icon={faStar}
-                          />
-                          <span className="rating">
-                            {" "}
-                            {serial.vote_average}{" "}
-                          </span>
-                        </div>
-                      </Col>
-                    </Row>
-                  </Card.Body>
-                </Card>
+                <TvSerial
+                  serial={serial}
+                  isAddedToFavorite={isAddedToFavorite}
+                />
               </Link>
             );
           })}
@@ -269,13 +205,15 @@ export default function TvShowLanding() {
       <Pagination
         onPreviousClick={() => {
           fetchTvSeries();
-          setCurrentPage(currentPage - 1);
+          setPage(page - 1);
+          // setCurrentPage(currentPage - 1);
         }}
         onNextClick={() => {
           fetchTvSeries();
-          setCurrentPage(currentPage + 1);
+          setPage(page + 1);
+          // setCurrentPage(currentPage + 1);
         }}
-        currentPage={currentPage}
+        page={page}
         totalPages={totalPages}
       />
     </>

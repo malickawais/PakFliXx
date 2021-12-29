@@ -9,22 +9,32 @@ import {
   BsPersonCircle,
   BsPersonSquare,
 } from "react-icons/bs";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 import { BiMale, BiFemale } from "react-icons/bi";
 import "./ActorCard.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import ModalPage from "../Modal/Modal";
 
 export default function ActorCard(props) {
   const { favorites, toggleFavorites } = useFavorites();
+  let navigate = useNavigate();
 
   const knownFor = props.actor?.known_for;
-  console.log(knownFor);
+  // console.log(knownFor);
   const gender = props.actor?.gender;
 
   const isAddedToFavorite = favorites.find((fav) => fav.id === props.actor.id);
+  function handleClick() {
+    navigate({ to: "/movies" });
+  }
 
   return (
     <>
       <Card className="actor">
+        {!props.actorListVeiw && (
+          <AiOutlineCloseCircle className="close-icon" onClick={handleClick} />
+        )}
+
         <Row className="w-75 position-relative">
           <Col className="p-2" key={props.actor.id}>
             {props.actor.profile_path ? (
@@ -66,7 +76,13 @@ export default function ActorCard(props) {
             <div className="known-for p-2">
               {knownFor?.slice(0, 2).map((movieOrSeason) => {
                 return (
-                  <Badge bg="info" className="me-2">
+                  <Badge
+                    bg="info"
+                    className="me-2"
+                    onClick={() => {
+                      props.onBadgeClick(movieOrSeason.id);
+                    }}
+                  >
                     {movieOrSeason.title}
                   </Badge>
                 );

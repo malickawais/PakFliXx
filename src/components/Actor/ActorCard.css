@@ -36,3 +36,8 @@
 .known-for-depart {
   font-size: small;
 }
+.close-icon {
+  right: 0px;
+  position: absolute;
+  top: 10px;
+}

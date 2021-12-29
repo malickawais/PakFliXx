@@ -11,18 +11,18 @@ export default function Pagination(props) {
             className="pagination-button"
             variant="info"
             onClick={props.onPreviousClick}
-            disabled={props.currentPage === 1}
+            disabled={props.page === 1}
           >
             Previous
           </Button>
         </div>
         <h5>
-          {props.currentPage} / {props.totalPages}
+          {props.page} / {props.totalPages}
         </h5>
         <div className="">
           <Button
             className="pagination-button"
-            disabled={props.currentPage === props.totalPages}
+            disabled={props.page === props.totalPages}
             variant="info"
             onClick={props.onNextClick}
           >

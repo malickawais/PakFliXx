@@ -12,7 +12,7 @@ import { getImageUrl } from "../../utils";
 import { BsPersonCircle } from "react-icons/bs";
 import { BiCameraMovie } from "react-icons/bi";
 
-export default function DetailsPage() {
+export default function DetailsPage(props) {
   const navigate = useNavigate();
   const [showText, setShowText] = useState(false);
   const [posterImage, setPosterImage] = useState();
@@ -33,7 +33,7 @@ export default function DetailsPage() {
       const res = await apiClient({
         url:
           "/movie/" +
-          params.movieId +
+          (params.movieId || props.id) +
           "?append_to_response=videos,movie_credits,credits",
         method: "GET",
       });
@@ -48,8 +48,11 @@ export default function DetailsPage() {
   };
 
   useEffect(() => {
-    fetchMovie();
-  }, []);
+    if (params.movieId || props.id) {
+      // fetchMovie();
+      console.log("why it is being called a lot", props.id);
+    }
+  }, [params.movieId, props.id]);
 
   if (loading) {
     return (
