@@ -159,7 +159,7 @@ export default function MovieList() {
   return (
     <>
       <div className="movie-list-wrapper">
-        <Row>
+        <Row className="m-0">
           <Col xs={3}>
             {searchParams.get("person_id") && actor && (
               <div className="Actor-card">

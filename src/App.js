@@ -28,6 +28,8 @@ const App = () => {
     { path: "tv", element: <TvShowLanding /> },
     { path: "account", element: <Account /> },
     { path: "account/favorites", element: <FavouriteList /> },
+    { path: "favorites", element: <FavouriteList /> },
+
     { path: "actors", element: <ActorList /> },
     { path: "account/profile", element: <Profile /> },
     { path: "genres", element: <GenreList /> },

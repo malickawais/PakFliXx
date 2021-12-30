@@ -31,7 +31,7 @@ export default function ActorCard(props) {
   return (
     <>
       <Card className="actor">
-        {!props.actorListVeiw && (
+        {!props.hideCrossIcon && (
           <AiOutlineCloseCircle className="close-icon" onClick={handleClick} />
         )}
 
@@ -67,12 +67,6 @@ export default function ActorCard(props) {
         <p className="actor-name">{props.actor.name}</p>
         {!props.movieListVeiw && (
           <>
-            {gender === 1 ? (
-              <BiMale color={"black"} />
-            ) : gender === 2 ? (
-              <BiFemale color={"black"} />
-            ) : null}
-
             <div className="known-for p-2">
               {knownFor?.slice(0, 2).map((movieOrSeason) => {
                 return (

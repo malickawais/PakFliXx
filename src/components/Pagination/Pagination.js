@@ -17,7 +17,11 @@ export default function Pagination(props) {
           </Button>
         </div>
         <h5>
-          {props.page} / {props.totalPages}
+          {props.page && props.totalPages && (
+            <p>
+              {props.page} / {props.totalPages}
+            </p>
+          )}
         </h5>
         <div className="">
           <Button

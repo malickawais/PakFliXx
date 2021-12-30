@@ -3,6 +3,32 @@
   height: 100px;
   border-radius: 50%;
 }
+.detailPage-veiw {
+  min-width: 300px;
+  max-width: 300px;
+}
+.vote-average {
+  background-color: white;
+  color: rgb(143, 157, 229);
+  border-radius: 10px;
+  text-align: center;
+}
+.spinner {
+  display: flex;
+  justify-content: center;
+}
+.favourite-movie-wrapper {
+  position: absolute;
+  /* top: 20px; */
+  /* right: 15px; */
+  width: 40px !important;
+  padding: 5px;
+  background-color: white;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .pakflix-wrapper {
   /* justify-content: center; */
   /* margin-top: 10px; */

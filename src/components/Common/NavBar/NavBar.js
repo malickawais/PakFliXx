@@ -1,7 +1,8 @@
 import React from "react";
-import { Container, Nav, Navbar, Button } from "react-bootstrap";
+import { Container, Nav, Navbar, Button, Badge } from "react-bootstrap";
 import { Link, NavLink, useResolvedPath, useMatch } from "react-router-dom";
 import "./NavBar.css";
+import useFavorites from "../../../contexts/FavouriteContext";
 
 function CustomLink({ children, to, ...props }) {
   let resolved = useResolvedPath(to);
@@ -21,6 +22,8 @@ function CustomLink({ children, to, ...props }) {
 }
 
 export default function NavBar({ user, onLogout }) {
+  const { favorites, toggleFavorites } = useFavorites();
+
   return (
     <Navbar className="navbar-container" bg="dark" variant="dark" expand="lg">
       <Container>
@@ -32,10 +35,14 @@ export default function NavBar({ user, onLogout }) {
           <Nav className="d-flex align-items-center justify-content-between w-100">
             <div>
               <CustomLink to="/movies">Movies</CustomLink>
-              <CustomLink to="/genres">Genres</CustomLink>
               <CustomLink to="/tv">Tv</CustomLink>
               <CustomLink to="/actors">Actors</CustomLink>
+
+              <CustomLink to="/genres">Genres</CustomLink>
               <CustomLink to="/account">Account</CustomLink>
+              <CustomLink to="/favorites">
+                Favourites <Badge bg="primary">{favorites.length}</Badge>
+              </CustomLink>
             </div>
             {/* <div>
               {user ? (

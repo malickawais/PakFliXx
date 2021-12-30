@@ -132,7 +132,7 @@ export default function ActorList() {
                   <Col className="my-2" md={3}>
                     <ActorCard
                       actor={actor}
-                      actorListVeiw={true}
+                      hideCrossIcon={true}
                       onBadgeClick={(_id) => {
                         setId(_id);
                         setShow(true);

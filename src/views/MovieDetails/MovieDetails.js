@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faStar } from "@fortawesome/free-solid-svg-icons";
-import { Card, Row, Badge, Col, Spinner, Button } from "react-bootstrap";
+import {
+  Card,
+  Row,
+  Badge,
+  Col,
+  Spinner,
+  Button,
+  OverlayTrigger,
+  Popover,
+} from "react-bootstrap";
 
 import "./DetailPage.css";
 import YoutubeEmbed from "../../components/Common/YoutubeEmbed/YoutubeEmbed";
@@ -11,8 +20,13 @@ import apiClient from "../../apiClient";
 import { getImageUrl } from "../../utils";
 import { BsPersonCircle } from "react-icons/bs";
 import { BiCameraMovie } from "react-icons/bi";
+import ActorCard from "../../components/Actor/ActorCard";
+import useFavorites from "../../contexts/FavouriteContext";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
 
 export default function DetailsPage(props) {
+  const { favorites, toggleFavorites } = useFavorites();
+
   const navigate = useNavigate();
   const [showText, setShowText] = useState(false);
   const [posterImage, setPosterImage] = useState();
@@ -26,6 +40,7 @@ export default function DetailsPage(props) {
   const [loading, setLoading] = useState(false);
 
   const params = useParams();
+  const isAddedToFavorite = favorites.find((fav) => fav.id === movie.id);
 
   const fetchMovie = async () => {
     try {
@@ -49,16 +64,18 @@ export default function DetailsPage(props) {
 
   useEffect(() => {
     if (params.movieId || props.id) {
-      // fetchMovie();
+      fetchMovie();
       console.log("why it is being called a lot", props.id);
     }
   }, [params.movieId, props.id]);
 
   if (loading) {
     return (
-      <Spinner className={"ms-2"} size="lg" animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
+      <div className="spinner">
+        <Spinner className={"ms-2"} size="lg" animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
     );
   }
 
@@ -67,6 +84,14 @@ export default function DetailsPage(props) {
   );
   const director = movie?.credits?.crew?.find(
     (dir) => dir.known_for_department === "Directing"
+  );
+
+  const popover = (actor) => (
+    <Popover>
+      <div className="detailPage-veiw">
+        <ActorCard hideCrossIcon={true} actor={actor} />
+      </div>
+    </Popover>
   );
 
   return (
@@ -82,7 +107,20 @@ export default function DetailsPage(props) {
               />
             </Col>
             <Col className="d-flex justify-content-end" xs={8}>
-              <FontAwesomeIcon className="overveiw star-icon" icon={faStar} />
+              <div
+                className="favourite-movie-wrapper"
+                onClick={() => {
+                  toggleFavorites({ ...movie, favouriteType: "movie" });
+                }}
+              >
+                <div>
+                  {isAddedToFavorite ? (
+                    <BsHeartFill color={"red"} size={"20"} />
+                  ) : (
+                    <BsHeart color={"black"} size={"20"} />
+                  )}
+                </div>
+              </div>
             </Col>
           </Row>
           <Row className="mt-4 w-100">
@@ -143,28 +181,39 @@ export default function DetailsPage(props) {
               </span>
             </p>
           </Row>
+
           <div className="actors d-flex flex-row">
             {movie.credits?.cast?.map((actor) => (
-              <div key={actor.id} className="text-center me-2 actor-container">
-                {actor.profile_path ? (
-                  <img
-                    className="img"
-                    src={getImageUrl(actor.profile_path)}
-                    alt=""
-                  />
-                ) : (
-                  <BsPersonCircle size={"60"} color={"white"} />
-                )}
-                <p>{actor.name}</p>
-              </div>
+              <OverlayTrigger
+                trigger="click"
+                placement="right"
+                rootClose
+                overlay={popover(actor)}
+              >
+                <div
+                  key={actor.id}
+                  className="text-center me-2 actor-container"
+                >
+                  {actor.profile_path ? (
+                    <img
+                      className="img"
+                      src={getImageUrl(actor.profile_path)}
+                      alt=""
+                    />
+                  ) : (
+                    <BsPersonCircle size={"60"} color={"white"} />
+                  )}
+                  <p>{actor.name}</p>
+                </div>
+              </OverlayTrigger>
             ))}
           </div>
-          <Row className="overveiw py-4">
-            <Col className="me-4 px-4">
+          <Row className="py-4">
+            <Col className="me-4 px-4 py-4 vote-average">
               <h3 className="imdb">Vote Average</h3>
               <p className="imdb">{movie.vote_average}</p>
             </Col>
-            <Col className="ms-4 px-4">
+            <Col className="ms-4 px-4 py-4 vote-average">
               <h3 className="imdb">Vote Count</h3>
               <p className="imdb">{movie.vote_count}</p>
             </Col>

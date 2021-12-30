@@ -14,6 +14,8 @@ export default function FavouriteList() {
   const movie = favorites.filter((fav) => fav.favouriteType === "movie");
   const serial = favorites.filter((fav) => fav.favouriteType === "tv");
 
+  // const totalCount = movie.length + serial.length + actor.length;
+  // console.log(totalCount);
   return (
     <div>
       <h4 className="m-2">
