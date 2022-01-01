@@ -13,27 +13,32 @@ import {
 } from "react-bootstrap";
 
 import "../../views/MovieDetails/DetailPage.css";
-import YoutubeEmbed from "../../components/Common/YoutubeEmbed/YoutubeEmbed";
+import YoutubeEmbed from "../Common/YoutubeEmbed/YoutubeEmbed";
 
 import { Navigate, useNavigate, useParams } from "react-router";
 import apiClient from "../../apiClient";
 import { getImageUrl } from "../../utils";
 import { BsPersonCircle } from "react-icons/bs";
 import { BiCameraMovie } from "react-icons/bi";
-import ActorCard from "../../components/Actor/ActorCard";
+import ActorCard from "../Actor/ActorCard";
 import useFavorites from "../../contexts/FavouriteContext";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import Carousel from "../Courosel/Carousel";
 import CarouselCard from "../Courosel/Carousel";
+import { NavLink } from "react-router-dom";
+import ModalPage from "../Modal/Modal";
+import SeasonDetailPage from "./SeasonDetailPage";
 
 export default function TvSerialDetailCard() {
   const { favorites, toggleFavorites } = useFavorites();
 
   const navigate = useNavigate();
   const [serial, setSerial] = useState({});
+  const [season, setSeason] = useState({});
   const [loading, setLoading] = useState(false);
   const [showText, setShowText] = useState(false);
   const [posterImage, setPosterImage] = useState();
+  const [show, setShow] = useState();
 
   const params = useParams();
   const isAddedToFavorite = favorites.find((fav) => fav.id === serial.id);
@@ -129,11 +134,11 @@ export default function TvSerialDetailCard() {
             <Col className="ps-4" xs={10}>
               {serial.homepage ? (
                 <a className="overveiw" href={serial.homepage} target="_blank">
-                  {serial.title}
+                  {serial.name}
                 </a>
               ) : (
                 <>
-                  <h4 className="overveiw">{serial.title}</h4> <br />
+                  <h4 className="overveiw">{serial.name}</h4> <br />
                 </>
               )}
               <p className="overveiw">
@@ -144,7 +149,7 @@ export default function TvSerialDetailCard() {
 
               {serial.genres?.map((gen) => {
                 return (
-                  <Badge pill bg="warning" className="me-2">
+                  <Badge key={gen.id} pill bg="warning" className="me-2">
                     {gen.name}
                   </Badge>
                 );
@@ -152,8 +157,23 @@ export default function TvSerialDetailCard() {
             </Col>
           </Row>
           <div className="d-flex my-3 justify-content-center">
-            {/* {trailerVid && <YoutubeEmbed embedId={trailerVid?.key} />} */}
-            <CarouselCard seasons={serial.seasons} />;
+            <CarouselCard
+              seasons={serial.seasons}
+              onSeasonPosterClick={(_season) => {
+                setSeason(_season);
+                setShow(true);
+              }}
+            />
+            ;
+            <ModalPage
+              title={season?.name}
+              show={show}
+              onHide={() => setShow(false)}
+            >
+              {season && (
+                <SeasonDetailPage seasonNumber={season.season_number} />
+              )}
+            </ModalPage>
           </div>
           <Row className="my-4">
             <Col>
@@ -180,30 +200,26 @@ export default function TvSerialDetailCard() {
 
           <div className="actors d-flex flex-row">
             {serial.credits?.cast?.map((actor) => (
-              <>
-                <OverlayTrigger
-                  trigger="click"
-                  placement="right"
-                  rootClose
-                  overlay={popover(actor)}
-                >
-                  <div
-                    key={actor.id}
-                    className="text-center me-2 actor-container"
-                  >
-                    {actor.profile_path ? (
-                      <img
-                        className="img"
-                        src={getImageUrl(actor.profile_path)}
-                        alt=""
-                      />
-                    ) : (
-                      <BsPersonCircle size={"60"} color={"white"} />
-                    )}
-                    <p>{actor.name}</p>
-                  </div>
-                </OverlayTrigger>
-              </>
+              <OverlayTrigger
+                key={actor.id}
+                trigger="click"
+                placement="right"
+                rootClose
+                overlay={popover(actor)}
+              >
+                <div className="text-center me-2 actor-container">
+                  {actor.profile_path ? (
+                    <img
+                      className="img"
+                      src={getImageUrl(actor.profile_path)}
+                      alt=""
+                    />
+                  ) : (
+                    <BsPersonCircle size={"60"} color={"white"} />
+                  )}
+                  <p>{actor.name}</p>
+                </div>
+              </OverlayTrigger>
             ))}
           </div>
           <Row className="py-4">

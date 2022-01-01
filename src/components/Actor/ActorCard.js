@@ -72,9 +72,10 @@ export default function ActorCard(props) {
                 return (
                   <Badge
                     bg="info"
-                    className="me-2"
+                    key={movieOrSeason.id}
+                    className="me-2 cursor-pointer"
                     onClick={() => {
-                      props.onBadgeClick(movieOrSeason.id);
+                      props.onBadgeClick(movieOrSeason);
                     }}
                   >
                     {movieOrSeason.title}

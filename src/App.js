@@ -15,7 +15,7 @@ import ActorList from "./views/Actor/ActorList";
 import Profile from "./components/Profile/Profile";
 import GenreList from "./views/Genres/GenreList";
 import ModalPage from "./components/Modal/Modal";
-import TvSerialDetailCard from "./components/DetailPage/DetailsPageCard";
+import TvSerialDetailCard from "./components/DetailPage/TvDetailsPageCard";
 
 const App = () => {
   const routes = useRoutes([

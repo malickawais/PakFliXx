@@ -10,13 +10,16 @@ export default function CarouselCard(props) {
     <Carousel className="w-100" interval={null}>
       {props?.seasons?.map((season) => {
         return (
-          <Carousel.Item>
+          <Carousel.Item key={season.id}>
             <img
-              className="d-block carousel-img-poster"
+              onClick={() => {
+                props.onSeasonPosterClick(season);
+              }}
+              className="d-block carousel-img-poster cursor-pointer"
               src={getImageUrl(season.poster_path)}
               alt="First slide"
             />
-
+            {season.name}
             <h3 className="text-center my-2 overveiw">{season.name}</h3>
             <p className="overveiw text-center">
               {showText

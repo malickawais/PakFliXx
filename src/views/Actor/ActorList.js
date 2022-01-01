@@ -7,6 +7,7 @@ import { Spinner, Row, Col, Button, FormControl } from "react-bootstrap";
 import Pagination from "../../components/Pagination/Pagination";
 import "./ActorList.css";
 import ModalPage from "../../components/Modal/Modal";
+import MovieDetails from "../../views/MovieDetails/MovieDetails";
 
 export default function ActorList() {
   const [actors, setActors] = useState([]);
@@ -18,7 +19,7 @@ export default function ActorList() {
   const [disable, setDisable] = useState(false);
   const [totalPages, setTotalPages] = useState();
   const [show, setShow] = useState(false);
-  const [id, setId] = useState("");
+  const [movie, setMovie] = useState();
 
   const onChangeHandler = (e) => {
     const query = e.target.value;
@@ -128,27 +129,27 @@ export default function ActorList() {
           <>
             {actors.map((actor) => {
               return (
-                <>
-                  <Col className="my-2" md={3}>
-                    <ActorCard
-                      actor={actor}
-                      hideCrossIcon={true}
-                      onBadgeClick={(_id) => {
-                        setId(_id);
-                        setShow(true);
-                      }}
-                    />
-                  </Col>
-                  <ModalPage
-                    id={id}
-                    show={show}
-                    onHide={() => setShow(false)}
+                <Col key={actor.id} className="my-2" md={3}>
+                  <ActorCard
+                    actor={actor}
+                    hideCrossIcon={true}
+                    onBadgeClick={(movie) => {
+                      setMovie(movie);
+                      setShow(true);
+                    }}
                   />
-                </>
+                </Col>
               );
             })}
           </>
         )}
+        <ModalPage
+          title={movie?.title}
+          show={show}
+          onHide={() => setShow(false)}
+        >
+          {movie && <MovieDetails id={movie.id} />}
+        </ModalPage>
       </Row>
 
       <Pagination

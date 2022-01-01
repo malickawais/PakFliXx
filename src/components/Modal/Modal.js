@@ -11,11 +11,9 @@ export default function ModalPage(props) {
       onHide={props.onHide}
     >
       <Modal.Header closeButton>
-        {/* <Modal.Title>Modal</Modal.Title> */}
+        <Modal.Title>{props.title}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <MovieDetails id={props.id} />
-      </Modal.Body>
+      <Modal.Body>{props.children}</Modal.Body>
     </Modal>
   );
 }

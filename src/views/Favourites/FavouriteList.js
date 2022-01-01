@@ -29,7 +29,7 @@ export default function FavouriteList() {
               (fav) => fav.id === fav.id
             );
             return (
-              <div className="me-2">
+              <div key={fav.id} className="me-2">
                 <MovieCard movie={fav} isAddedToFavorite={isAddedToFavorite} />
               </div>
             );
@@ -52,7 +52,7 @@ export default function FavouriteList() {
               (fav) => fav.id === fav.id
             );
             return (
-              <div className="me-2 actor-wrapper">
+              <div key={fav.id} className="me-2 actor-wrapper">
                 <ActorCard
                   actor={fav}
                   hideCrossIcon={true}
@@ -78,7 +78,7 @@ export default function FavouriteList() {
               (fav) => fav.id === fav.id
             );
             return (
-              <div className="me-2">
+              <div key={fav.id} className="me-2">
                 <TvSerial serial={fav} isAddedToFavorite={isAddedToFavorite} />
               </div>
             );

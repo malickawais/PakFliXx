@@ -215,7 +215,11 @@ export default function MovieList() {
             <div className="search-bar">
               <Form.Select value={genreMovies} onChange={onGenreSelectHandler}>
                 {generes.map((genre) => {
-                  return <option value={genre.id}>{genre.name}</option>;
+                  return (
+                    <option key={genre.id} value={genre.id}>
+                      {genre.name}
+                    </option>
+                  );
                 })}
               </Form.Select>
             </div>
@@ -247,6 +251,7 @@ export default function MovieList() {
               );
               return (
                 <MovieCard
+                  key={movie.id}
                   movie={movie}
                   isAddedToFavorite={isAddedToFavorite}
                 />
