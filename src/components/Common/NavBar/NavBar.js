@@ -41,7 +41,10 @@ export default function NavBar({ user, onLogout }) {
               <CustomLink to="/genres">Genres</CustomLink>
               <CustomLink to="/account">Account</CustomLink>
               <CustomLink to="/favorites">
-                Favourites <Badge bg="primary">{favorites.length}</Badge>
+                Favourites
+                {favorites.length > 0 && (
+                  <Badge bg="primary">{favorites.length}</Badge>
+                )}
               </CustomLink>
             </div>
             {/* <div>

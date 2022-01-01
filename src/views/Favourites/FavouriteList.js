@@ -53,7 +53,11 @@ export default function FavouriteList() {
             );
             return (
               <div className="me-2 actor-wrapper">
-                <ActorCard actor={fav} isAddedToFavorite={isAddedToFavorite} />
+                <ActorCard
+                  actor={fav}
+                  hideCrossIcon={true}
+                  isAddedToFavorite={isAddedToFavorite}
+                />
               </div>
             );
           })}

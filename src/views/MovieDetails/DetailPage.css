@@ -48,6 +48,9 @@
   overflow-y: hidden;
   white-space: nowrap;
 }
+.act {
+  cursor: pointer;
+}
 .overveiw {
   color: white;
 }
@@ -69,4 +72,5 @@
 .actor-container {
   width: 150px;
   white-space: pre-wrap;
+  cursor: pointer;
 }

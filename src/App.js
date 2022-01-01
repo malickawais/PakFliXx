@@ -15,6 +15,7 @@ import ActorList from "./views/Actor/ActorList";
 import Profile from "./components/Profile/Profile";
 import GenreList from "./views/Genres/GenreList";
 import ModalPage from "./components/Modal/Modal";
+import TvSerialDetailCard from "./components/DetailPage/DetailsPageCard";
 
 const App = () => {
   const routes = useRoutes([
@@ -24,6 +25,8 @@ const App = () => {
     { path: "Signup", element: <Signup /> },
     { path: "movies", element: <MovieList /> },
     { path: "movies/:movieId", element: <DetailsPage /> },
+    { path: "serial/:serialId", element: <TvSerialDetailCard /> },
+
     { path: "ForgetPassword", element: <ForgetPassword /> },
     { path: "tv", element: <TvShowLanding /> },
     { path: "account", element: <Account /> },

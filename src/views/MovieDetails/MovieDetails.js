@@ -184,28 +184,30 @@ export default function DetailsPage(props) {
 
           <div className="actors d-flex flex-row">
             {movie.credits?.cast?.map((actor) => (
-              <OverlayTrigger
-                trigger="click"
-                placement="right"
-                rootClose
-                overlay={popover(actor)}
-              >
-                <div
-                  key={actor.id}
-                  className="text-center me-2 actor-container"
+              <>
+                <OverlayTrigger
+                  trigger="click"
+                  placement="right"
+                  rootClose
+                  overlay={popover(actor)}
                 >
-                  {actor.profile_path ? (
-                    <img
-                      className="img"
-                      src={getImageUrl(actor.profile_path)}
-                      alt=""
-                    />
-                  ) : (
-                    <BsPersonCircle size={"60"} color={"white"} />
-                  )}
-                  <p>{actor.name}</p>
-                </div>
-              </OverlayTrigger>
+                  <div
+                    key={actor.id}
+                    className="text-center me-2 actor-container"
+                  >
+                    {actor.profile_path ? (
+                      <img
+                        className="img"
+                        src={getImageUrl(actor.profile_path)}
+                        alt=""
+                      />
+                    ) : (
+                      <BsPersonCircle size={"60"} color={"white"} />
+                    )}
+                    <p>{actor.name}</p>
+                  </div>
+                </OverlayTrigger>
+              </>
             ))}
           </div>
           <Row className="py-4">

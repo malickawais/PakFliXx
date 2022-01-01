@@ -10,6 +10,8 @@ import {
   Button,
   Form,
 } from "react-bootstrap";
+import { Link } from "react-router-dom";
+
 import useFavorites from "../../contexts/FavouriteContext";
 import { getImageUrl } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,19 +28,29 @@ export default function TvSerial(props) {
           }}
           className="movie-1 "
         >
-          <Col xs={3}>
-            <img
-              src={getImageUrl(props.serial.poster_path)}
-              className=" px-1 py-3 image-1"
-            />
-          </Col>
-          <Col className="image1-text" xs={7}>
-            <h5>{props.serial.name}</h5>
-            <Row>
-              <Col>
-                <p>Serial</p>
-              </Col>
-            </Row>
+          <Col xs={10}>
+            <Link
+              style={{ textDecoration: "none" }}
+              key={props.serial.id}
+              to={"/serial/" + props.serial.id}
+            >
+              <Row>
+                <Col xs={3}>
+                  <img
+                    src={getImageUrl(props.serial.poster_path)}
+                    className=" px-1 py-3 image-1"
+                  />
+                </Col>
+                <Col className="image1-text" xs={7}>
+                  <h5>{props.serial.name}</h5>
+                  <Row>
+                    <Col>
+                      <p>Serial</p>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Link>
           </Col>
           <Col
             className="d-flex jutify-content-between flex-column py-4 px-2"
