@@ -95,7 +95,7 @@ export default function ActorList() {
           </Col>
           <Col className="px-2" xs={2}>
             <Button
-              disabled={query === ""}
+              disabled={!query}
               onClick={() => {
                 setQuery("");
                 fetchActors();
